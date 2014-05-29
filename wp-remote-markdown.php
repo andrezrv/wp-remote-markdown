@@ -40,7 +40,9 @@ function remote_markdown_google_prettify_scripts() {
 	global $post;
 
 	// Check if shortcode is used within post content or post excerpt.
-	$prettify_condition = has_shortcode( $post->post_excerpt, 'remote-markdown' ) || has_shortcode( $post->post_content, 'remote-markdown' );
+	$prettify_condition = (   has_shortcode( $post->post_excerpt, 'remote-markdown' )
+		                   || has_shortcode( $post->post_content, 'remote-markdown' )
+		                   || ! is_singular() );
 	$prettify_condition = apply_filters( 'remote_markdown_prettify_condition', $prettify_condition, $post );
 
 	// Enqueue scripts.
@@ -59,7 +61,8 @@ add_action( 'remote_markdown_enqueue_scripts', 'remote_markdown_enqueue_scripts'
  */
 function remote_markdown_enqueue_scripts() {
 	// Load Google Code Prettify directly from Google's SVN repo.
-	$url = 'https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js';
+	$basename = plugin_basename( dirname( __FILE__ ) );
+	$url = plugins_url( $basename . '/inc/google-code-prettify/run_prettify.js' );
 	$url = apply_filters( 'remote_markdown_prettify_script', $url );
 	wp_enqueue_script( 'prettify', $url, array(), '1.0', false );
 }
