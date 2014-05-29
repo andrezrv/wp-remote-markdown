@@ -1,0 +1,20 @@
+<h1 id="remote-markdown-for-wordpress">Remote Markdown For WordPress</h1>
+<p>This plugin adds a shortcode that allows to include contents in your posts and pages from a remote markdown-formatted file. It supports Github Flavored Markdown and is meant to synchronize your app documentation from your GitHub or Bitbucket repo to your website, without having the need to update both.</p>
+<p><strong>Current stable version:</strong> <a href="http://github.com/andrezrv/wp-remote-markdown/tree/1.0.1">1.0.1</a></p>
+<h2 id="usage">Usage</h2>
+<pre><code>[remote-markdown refresh=&quot;60&quot;]https://raw.githubusercontent.com/andrezrv/wp-remote-markdown/master/README.md[/remote-markdown]</code></pre>
+<p>Once loaded for the first time, a <a href="http://codex.wordpress.org/Transients_API">transient</a> will be created with the expiration (in seconds) specified in the <code>refresh</code> property. That will prevent your site from doing a lot of unnecessary requests while the remote file is not being updated. A value of zero, or not using the parameter, will prevent the creation of the transient.</p>
+<h2 id="installation">Installation</h2>
+<ol>
+<li>Clone with <code>git clone git@github.com:andrezrv/wp-remote-markdown.git</code> or download and unzip <code>wp-remote-markdown.zip</code> into your <code>/wp-content/plugins/</code> directory.</li>
+<li>Activate the plugin through the <strong>&quot;Plugins&quot;</strong> menu in WordPress.</li>
+</ol>
+<h2 id="contributing">Contributing</h2>
+<p>If you feel like you want to help this project by adding something you think useful, you can make your pull request against the master branch :)</p>
+<h2 id="credit-where-credit-is-due">Credit Where Credit is Due</h2>
+<p>This plugin makes use of the Emanuil Rusev&#39;s <a href="https://github.com/erusev/parsedown">Parsedown</a> PHP library for Markdown parsing, and <a href="(https://code.google.com/p/google-code-prettify/">Google Code Prettify</a>) for language syntax highlighting.</p>
+<h2 id="changelog">Changelog</h2>
+<h4 id="1-0-1">1.0.1</h4>
+<p>Added Google Code Prettify source code to prevent external dependencies.</p>
+<h4 id="1-0">1.0</h4>
+<p>First public release.</p>

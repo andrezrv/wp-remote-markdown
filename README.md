@@ -2,7 +2,7 @@
 
 This plugin adds a shortcode that allows to include contents in your posts and pages from a remote markdown-formatted file. It supports Github Flavored Markdown and is meant to synchronize your app documentation from your GitHub or Bitbucket repo to your website, without having the need to update both.
 
-**Current stable version:** [1.0](http://github.com/andrezrv/wp-remote-markdown/tree/1.0)
+**Current stable version:** [1.0.1](http://github.com/andrezrv/wp-remote-markdown/tree/1.0.1)
 
 ## Usage
 
@@ -25,6 +25,9 @@ If you feel like you want to help this project by adding something you think use
 This plugin makes use of the Emanuil Rusev's [Parsedown](https://github.com/erusev/parsedown) PHP library for Markdown parsing, and [Google Code Prettify]((https://code.google.com/p/google-code-prettify/)) for language syntax highlighting.
 
 ## Changelog
+
+#### 1.0.1
+Added Google Code Prettify source code to prevent external dependencies.
 
 #### 1.0
 First public release.
