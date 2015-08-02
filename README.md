@@ -28,6 +28,9 @@ This plugin makes use of the Emanuil Rusev's [Parsedown](https://github.com/erus
 
 ## Changelog
 
+#### 1.1
+Added compatibility with Crayon Syntax Highlighter plugin.
+
 #### 1.0.1
 Added Google Code Prettify source code to prevent external dependencies.
 
