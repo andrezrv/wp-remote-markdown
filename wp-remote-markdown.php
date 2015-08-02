@@ -79,11 +79,13 @@ add_shortcode( 'remote-markdown', 'remote_markdown_process' );
  */
 function remote_markdown_process( $atts, $content = '' ) {
 
-	// Make sure $atts['refresh'] is an integer.
+	// Make sure $atts['refresh'] is an integer and $atts['crayon'] is a boolean.
 	$atts = shortcode_atts( array(
 		'refresh' => 0,
+		'crayon' => false
 	), $atts, 'remote-markdown' );
 	$atts['refresh'] = ( int ) $atts['refresh'];
+    $atts['crayon'] = ( boolean )$atts['crayon'];
 
 	// Construct the transient name we're gonna look for.
 	$transient = 'remote_markdown_' . md5( $content . $atts['refresh'] );
@@ -103,8 +105,20 @@ function remote_markdown_process( $atts, $content = '' ) {
 			$parsedown = new Parsedown;
 			$content = $parsedown->text( $result['body'] );
 
-			// Prepare for Prettyprint.
-			$content = str_replace( '<code class="', '<code class="prettyprint ', $content );
+			// If the Crayon Syntax Highlighter plugin is available and the crayon boolean is set to true,
+			// use it to highlight the code. If not use Prettyprint.
+			if ($atts['crayon'] && class_exists('CrayonWP')) {
+
+				// replace the Parsedown <pre><code> tags with a <pre> tag, as Crayon just needs a <pre> tag to highlight the code
+				$content = preg_replace('(<pre><code class=".*">([.\s\w\W]*)<\/code><\/pre>)', '<pre>$1</pre>', $content);
+
+				// highlight the content with Crayon
+				$content = CrayonWP::highlight($content);
+			} else {
+
+				// add the 'prettyprint' class to the code tag such that Prettyprint highlights the code
+				$content = str_replace('<code class="', '<code class="prettyprint ', $content);
+			}
 
 			// Save transient if $atts['refresh'] is > 0.
 			if ( $atts['refresh'] ) {
