@@ -13,7 +13,7 @@
 #
 #
 
-class Parsedown
+class WP_Remote_Markdown_Parsedown
 {
     #
     # Philosophy

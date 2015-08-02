@@ -102,7 +102,7 @@ function remote_markdown_process( $atts, $content = '' ) {
 		if ( isset( $result['body'] ) && $result['body'] ) {
 
 			require_once dirname( __FILE__ ) . '/inc/parsedown/Parsedown.php';
-			$parsedown = new Parsedown;
+			$parsedown = new WP_Remote_Markdown_Parsedown;
 			$content = $parsedown->text( $result['body'] );
 
 			// If the Crayon Syntax Highlighter plugin is available and the crayon boolean is set to true,
