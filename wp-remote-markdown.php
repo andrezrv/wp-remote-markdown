@@ -36,8 +36,7 @@ add_action( 'wp_enqueue_scripts', 'remote_markdown_google_prettify_scripts' );
  * @since  1.0
  */
 function remote_markdown_google_prettify_scripts() {
-
-	global $post;
+	$post = get_post();
 
 	// Check if shortcode is used within post content or post excerpt.
 	$prettify_condition = (   has_shortcode( $post->post_excerpt, 'remote-markdown' )
@@ -49,7 +48,6 @@ function remote_markdown_google_prettify_scripts() {
 	if ( $prettify_condition ) {
 		do_action( 'remote_markdown_enqueue_scripts' );
 	}
-
 }
 
 add_action( 'remote_markdown_enqueue_scripts', 'remote_markdown_enqueue_scripts' );
@@ -60,10 +58,9 @@ add_action( 'remote_markdown_enqueue_scripts', 'remote_markdown_enqueue_scripts'
  * @since  1.0
  */
 function remote_markdown_enqueue_scripts() {
-	// Load Google Code Prettify directly from Google's SVN repo.
-	$basename = plugin_basename( dirname( __FILE__ ) );
-	$url = plugins_url( $basename . '/inc/google-code-prettify/run_prettify.js' );
+	$url = plugins_url( plugin_basename( dirname( __FILE__ ) ) . '/inc/google-code-prettify/run_prettify.js' );
 	$url = apply_filters( 'remote_markdown_prettify_script', $url );
+
 	wp_enqueue_script( 'prettify', $url, array(), '1.0', false );
 }
 
@@ -78,56 +75,50 @@ add_shortcode( 'remote-markdown', 'remote_markdown_process' );
  * @since  1.0
  */
 function remote_markdown_process( $atts, $content = '' ) {
-
-	// Make sure $atts['refresh'] is an integer and $atts['crayon'] is a boolean.
 	$atts = shortcode_atts( array(
 		'refresh' => 0,
-		'crayon' => 0,
+		'crayon'  => 0,
 	), $atts, 'remote-markdown' );
+
+	// Make sure $atts['refresh'] is an integer and $atts['crayon'] is a boolean.
 	$atts['refresh'] = ( int ) $atts['refresh'];
-    $atts['crayon'] = ( '1' == $atts['crayon'] || 'true' == $atts['crayon'] );
+	$atts['crayon']  = ( '1' == $atts['crayon'] || 'true' == $atts['crayon'] );
 
 	// Construct the transient name we're gonna look for.
 	$transient = 'remote_markdown_' . md5( $content . $atts['refresh'] );
 
 	// If the transient exists, just return its content.
 	if ( $transient_content = get_transient( $transient ) ) {
-		$content = $transient_content;
-	} else {
-		// Make an HTTP request with the content of the shortcode. It will fail if it's not a URL.
-		$request = new WP_Http;
-		$result = $request->request( $content );
+		return $transient_content;
+	}
 
-		// If the request returns some content, parse its markdown as HTML.
-		if ( isset( $result['body'] ) && $result['body'] ) {
+	// Make an HTTP request with the content of the shortcode. Nothing will be returned if it's not a URL.
+	$request = new WP_Http;
+	$result  = ( $request instanceof WP_Http ) ? $request->request( $content ) : null;
 
-			require_once dirname( __FILE__ ) . '/inc/parsedown/Parsedown.php';
-			$parsedown = new WP_Remote_Markdown_Parsedown;
-			$content = $parsedown->text( $result['body'] );
+	// If the request returns some content, parse its markdown as HTML.
+	if ( isset( $result['body'] ) && $result['body'] ) {
+		require_once dirname( __FILE__ ) . '/inc/parsedown/Parsedown.php';
 
-			// If the Crayon Syntax Highlighter plugin is available and the crayon boolean is set to true,
-			// use it to highlight the code. If not use Prettyprint.
-			if ($atts['crayon'] && class_exists('CrayonWP')) {
+		$parsedown = new WP_Remote_Markdown_Parsedown;
+		$content   = $parsedown->text( $result['body'] );
 
-				// replace the Parsedown <pre><code> tags with a <pre> tag, as Crayon just needs a <pre> tag to highlight the code
-				$content = preg_replace('(<pre><code class=".*">([.\s\w\W]*)<\/code><\/pre>)', '<pre>$1</pre>', $content);
+		// If the Crayon Syntax Highlighter plugin is available and the crayon boolean is set to true,
+		// use it to highlight the code. If not use Prettyprint.
+		if ( $atts['crayon'] && class_exists( 'CrayonWP' ) ) {
+			// Replace the Parsedown <pre><code> tags with a <pre> tag, as Crayon just needs a <pre> tag to highlight the code.
+			$content = preg_replace( '(<pre><code class=".*">([.\s\w\W]*)<\/code><\/pre>)', '<pre>$1</pre>', $content );
 
-				// highlight the content with Crayon
-				$content = CrayonWP::highlight($content);
-			} else {
-
-				// add the 'prettyprint' class to the code tag such that Prettyprint highlights the code
-				$content = str_replace('<code class="', '<code class="prettyprint ', $content);
-			}
-
-			// Save transient if $atts['refresh'] is > 0.
-			if ( $atts['refresh'] ) {
-				set_transient( $transient, $content, $atts['refresh'] );
-			}
-
+			// Highlight the content with Crayon.
+			$content = CrayonWP::highlight( $content );
 		} else {
-			// Return empty content if a proper URL wasn't provided.
-			$content = '';
+			// Add the 'prettyprint' class to the code tag such that Prettyprint highlights the code.
+			$content = str_replace( '<code class="', '<code class="prettyprint ', $content );
+		}
+
+		// Save transient if $atts['refresh'] is > 0.
+		if ( $atts['refresh'] ) {
+			set_transient( $transient, $content, $atts['refresh'] );
 		}
 	}
 
