@@ -8,7 +8,7 @@
  * or Bitbucket repo to your website, without having the need to update both.
  *
  * @package   WP_Remote_Markdown
- * @version   1.0
+ * @version   1.1
  * @author    Andrés Villarreal <andrezrv@gmail.com>
  * @license   GPL-2.0
  * @link      http://github.com/andrezrv/wp-remote-markdown
@@ -19,7 +19,7 @@
  * Description: This plugin adds a shortcode that allows to include contents in your posts and pages from a remote markdown-formatted file. It supports Github Flavored Markdown and is meant to synchronize your app documentation from your GitHub or Bitbucket repo to your website, without having the need to update both.
  * Author: Andr&eacute;s Villarreal
  * Author URI: http://www.andrezrv.com
- * Version: 1.0
+ * Version: 1.1
  *
  * @attribution (Credit where credit is due)
  * This plugin makes use of the Emanuil Rusev's Parsedown PHP library

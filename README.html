@@ -1,8 +1,9 @@
 <h1 id="remote-markdown-for-wordpress">Remote Markdown For WordPress</h1>
 <p>This plugin adds a shortcode that allows to include contents in your posts and pages from a remote markdown-formatted file. It supports Github Flavored Markdown and is meant to synchronize your app documentation from your GitHub or Bitbucket repo to your website, without having the need to update both.</p>
-<p><strong>Current stable version:</strong> <a href="http://github.com/andrezrv/wp-remote-markdown/tree/1.0.1">1.0.1</a></p>
+<p><strong>Current stable version:</strong> <a href="http://github.com/andrezrv/wp-remote-markdown/tree/1.1">1.1</a></p>
 <h2 id="usage">Usage</h2>
 <pre><code>[remote-markdown refresh=&quot;60&quot;]https://raw.githubusercontent.com/andrezrv/wp-remote-markdown/master/README.md[/remote-markdown]</code></pre>
+<p>Use <code>crayon="1"</code> to activate compatibility with the Crayon Syntax Highlighter plugin, if you have it installed.</p>
 <p>Once loaded for the first time, a <a href="http://codex.wordpress.org/Transients_API">transient</a> will be created with the expiration (in seconds) specified in the <code>refresh</code> property. That will prevent your site from doing a lot of unnecessary requests while the remote file is not being updated. A value of zero, or not using the parameter, will prevent the creation of the transient.</p>
 <h2 id="installation">Installation</h2>
 <ol>
