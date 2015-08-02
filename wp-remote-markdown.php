@@ -82,10 +82,10 @@ function remote_markdown_process( $atts, $content = '' ) {
 	// Make sure $atts['refresh'] is an integer and $atts['crayon'] is a boolean.
 	$atts = shortcode_atts( array(
 		'refresh' => 0,
-		'crayon' => false
+		'crayon' => 0,
 	), $atts, 'remote-markdown' );
 	$atts['refresh'] = ( int ) $atts['refresh'];
-    $atts['crayon'] = ( boolean )$atts['crayon'];
+    $atts['crayon'] = ( '1' == $atts['crayon'] || 'true' == $atts['crayon'] );
 
 	// Construct the transient name we're gonna look for.
 	$transient = 'remote_markdown_' . md5( $content . $atts['refresh'] );
